@@ -89,12 +89,8 @@ module CodeTools
         @splat = nil
         @single = nil
 
-        if conditions.kind_of? ConcatArgs
-          @splat = SplatWhen.new line, conditions.rest
-          conditions = conditions.array
-        end
-
-        if conditions.kind_of? ArrayLiteral
+        case conditions
+        when ArrayLiteral
           if conditions.body.last.kind_of? When
             last = conditions.body.pop
             if last.conditions.kind_of? ArrayLiteral
@@ -111,8 +107,8 @@ module CodeTools
           else
             @conditions = conditions
           end
-        elsif conditions.kind_of? SplatValue
-          @splat = SplatWhen.new line, conditions.value
+        when SplatValue, ConcatArgs, PushArgs
+          @splat = SplatWhen.new line, conditions
           @conditions = nil
         else
           @conditions = conditions
