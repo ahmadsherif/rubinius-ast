@@ -789,6 +789,10 @@ module CodeTools
 
     module LocalVariable
       attr_accessor :variable
+
+      def placeholder?
+        name.to_s.start_with?("_:")
+      end
     end
 
     class BlockArgument < Node
